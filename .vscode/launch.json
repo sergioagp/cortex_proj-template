@@ -1,0 +1,28 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "(gdb) Launch",
+            "type":"cortex-debug",
+
+            "debugServer": 4711
+        },
+        {
+            "type": "cortex-debug",
+            "request": "launch",
+            "name": "Debug (QEMU)",
+            "servertype": "qemu",
+            "cwd": "${workspaceRoot}",
+            //"preLaunchTask": "Compile Build (debug)",
+            "executable": "./ta_memtest.elf",
+            "cpu": "cortex-m0",
+            "breakAfterReset":true
+        },
+        {
+            ""
+        }
+    ]
+}
