@@ -1,0 +1,23 @@
+# Requisites
+.vscode/*
+
+
+# Prerequisites
+*.d
+
+# Object files
+*.o
+*.ko
+*.obj
+*.elf
+
+# Libraries
+*.a
+
+
+
+# Executables
+*.bin
+*.coe
+*.hex
+*.lst

@@ -1,4 +1,4 @@
-PROJECT = ta_memtest
+PROJECT = helloworld
 
 BIN_FOLDER = bin/
 

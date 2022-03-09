@@ -48,8 +48,6 @@ reset_handler:
   //setup interrupts
 loop:
     b loop    // Should not run here
-
-
 .size reset_handler, .-reset_handler
 
 /*  Macro to define default handlers. */

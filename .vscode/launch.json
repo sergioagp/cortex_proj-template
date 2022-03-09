@@ -5,19 +5,13 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "(gdb) Launch",
-            "type":"cortex-debug",
-
-            "debugServer": 4711
-        },
-        {
             "type": "cortex-debug",
             "request": "launch",
             "name": "Debug (QEMU)",
-            "servertype": "qemu",
+            "servertype":"qemu",
             "cwd": "${workspaceRoot}",
             //"preLaunchTask": "Compile Build (debug)",
-            "executable": "./ta_memtest.elf",
+            "executable": "./helloworld.elf",
             "cpu": "cortex-m0",
             "breakAfterReset":true
         },

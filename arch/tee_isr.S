@@ -21,8 +21,6 @@
 .global         tee_ta_initcontext_isr
 .type           tee_ta_initcontext_isr, %function
 tee_ta_initcontext_isr:
-    ldr     r0, =0x40000000
-    ldr     r0, [r0]
     b        tee_ta_initcontext_isr
 /* Read interrupt status to clear pending */
 //check input
