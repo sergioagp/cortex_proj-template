@@ -35,7 +35,6 @@ C_SRCS	 	+= arch/cortex-m1/system.c
 
 C_SRCS	 	+= apps/main.c
 
-
 ASM_OBJS	:= $(ASM_SRCS:.S=.o)
 C_OBJS		:= $(C_SRCS:.c=.o)
 OBJECTS		:= $(ASM_OBJS) $(C_OBJS)
