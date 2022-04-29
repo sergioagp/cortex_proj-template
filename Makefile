@@ -1,4 +1,4 @@
-PROJECT = helloworld
+PROJECT = $(shell basename $(CURDIR))
 
 BIN_FOLDER = bin/
 
@@ -22,15 +22,19 @@ SSTRIP		:=	$(CROSS_COMPILE)strip
 # Objects declaration
 #############################################################
 INCLUDES 	+= -I.
-INCLUDES	+= -Itee
-INCLUDES 	+= -Itee/include
+INCLUDES	+= -Iarch/cortex-m1
+INCLUDES 	+= -Iapps/
 
 
 ASM_SRCS 	+= arch/cortex-m1/boot.S
-ASM_SRCS 	+= arch/tee_isr.S
 
 #C_SRCS	 	+= tee/tee_isr.c
+C_SRCS	 	+= arch/cortex-m1/syscalls.c
+C_SRCS	 	+= arch/cortex-m1/uart_driver.c
+C_SRCS	 	+= arch/cortex-m1/system.c
+
 C_SRCS	 	+= apps/main.c
+
 
 ASM_OBJS	:= $(ASM_SRCS:.S=.o)
 C_OBJS		:= $(C_SRCS:.c=.o)
@@ -46,14 +50,19 @@ PROJECT_OBJS += $(PROJECT).coe
 # Flags definitions
 #############################################################
 
-MCUFLAGS	+= -march=armv6-m
+#MCUFLAGS	+= -march=armv6-m
 MCUFLAGS	+= -mcpu=cortex-m1
 
-LDFLAGS		+= -T $(LD_SCRIPT)
-LDFLAGS 	+= -static $(MCUFLAGS)
-LDFLAGS		+= -mthumb
-LDFLAGS 	+= -nostartfiles
-LDFLAGS 	+= -Xlinker --gc-sections
+LDFLAGS		+= -T$(LD_SCRIPT)
+LDFLAGS		+= --specs=nosys.specs
+LDFLAGS 	+= -Wl,--gc-sections -static
+LDFLAGS 	+= --specs=nano.specs 
+LDFLAGS 	+= -mfloat-abi=soft
+LDFLAGS 	+= -mthumb
+LDFLAGS 	+=  -Wl,--start-group -lc -lm -Wl,--end-group
+
+
+#arm-none-eabi-gcc hello.c -mthumb -mcpu=cortex-m0  -Os  -ffunction-sections -fdata-sections  -Wl,--gc-sections -Wl,-Map=hello.map -o hello-CM0.axf
 
 
 CFLAGS		+= -g
@@ -84,16 +93,26 @@ debug: $(PROJECT).elf
 	$(CC) $(CFLAGS) -c -o $@ $<
 
 $(PROJECT).elf: $(OBJECTS) $(LINK_DEPS) Makefile
+#	arm-none-eabi-gcc -o $@ $(OBJECTS) $(LIBS) -mcpu=cortex-m0 -T$(LD_SCRIPT) --specs=nosys.specs -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	$(CC) $(OBJECTS) $(LDFLAGS) -o $@
+	@echo ' '
+	@echo 'Finished building target: $@'
 
 %.hex: %.elf
-	$(OBJCOPY) -O ihex $< $@
+	@$(OBJCOPY) -O ihex $< $@
+	@echo 'Finished building hexfile: $@'
 
 %.bin: %.elf
-	$(OBJCOPY) -O binary $< $@
+	@$(OBJCOPY) -O binary $< $@
+	@echo 'Finished building binary: $@'
+
 
 %.lst: %.elf
-	$(OBJDUMP) --all-headers --demangle --disassemble --file-headers --wide -D $< > $@
+	@$(OBJDUMP) --all-headers --demangle --disassemble --file-headers --wide -D $< > $@
+	@echo 'Finished building lstfile: $@'
+
 
 %.coe: %.bin
-	python3 tools/bintocoe.py $< $@ 
+	@python3 tools/bintocoe.py $< $@ 
+	@echo 'Finished building memfile: $@'
+

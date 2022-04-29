@@ -1,9 +1,6 @@
-#include "main.h"
-#include <stdlib.h>
-#include <stdio.h>
-#include <stdint.h>
 #include "uart_driver.h"
-#include <unistd.h>
+#include <stdint.h>
+
 
 #define Uart_IsTransmitFull() \
 	((read32(UARTLITE_ADDR+UART_STATUS_REG_OFFSET) & TX_FIFO_FULL) == \
@@ -22,14 +19,10 @@ static void write32(uintptr_t Addr, uint32_t Value)
 
 }
 
-
 // SIMPLE TEST R/W TO SHARED MEMORY
-int main(void)
+int uartlite_putchar(char ch)
 {
-	int fd_dummy = 0;
-	int result = putchar("Hello world with printf\n");
-
-	while (1)
-	{
-	}
+	while(Uart_IsTransmitFull());
+	write32(UARTLITE_ADDR+UART_TX_FIFO_OFFSET, ch);
+    return 1;
 }
